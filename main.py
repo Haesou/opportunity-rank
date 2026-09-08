@@ -1,4 +1,5 @@
 import heapq
+import math
 
 class Job:
     def __init__(self, title, company, description):
@@ -29,6 +30,38 @@ def tokenize(text):
             cleaned_words.append(cleaned_word)
 
     return cleaned_words
+
+def compute_tf(job):
+    tf = {}
+    words = tokenize(job.description)
+
+    for word in words:
+        if word not in tf:
+            tf[word] = 0
+        tf[word] += 1
+
+    for word in tf:
+        tf[word] = tf[word]/len(words)
+
+    return tf
+
+def compute_idf(jobs):
+    idf_scores = {}
+    index = build_inverted_index(jobs)
+
+    for word in index:
+        idf_scores[word] = math.log(len(jobs) / len(index[word]))
+
+    return idf_scores
+
+def compute_tfidf(job, idf_scores):
+    tfidf = {}
+    tf_scores = compute_tf(job)
+
+    for word in tf_scores:
+        tfidf[word] = tf_scores[word] * idf_scores[word]
+
+    return tfidf
 
 def build_inverted_index(jobs):
     index = {}
@@ -69,6 +102,54 @@ def top_k_jobs(scores, k):
             heapq.heappop(heap)
 
     return heap
+
+def compute_query_tfidf(query, idf_scores):
+    words = tokenize(query)
+    query_tfidf = {}
+    tf_score = {}
+
+    for word in words:
+        if word not in tf_score:
+            tf_score[word] = 0
+        tf_score[word] += 1
+
+    for word in tf_score:
+        tf_score[word] = tf_score[word]/len(words)
+
+    for word in tf_score:
+        if word in idf_scores:
+            query_tfidf[word] = tf_score[word] * idf_scores[word]
+
+    return query_tfidf
+
+def dot_product(vector1, vector2):
+    dot_product_value = 0
+
+    for word in vector1:
+        if word in vector2:
+            dot_product_value += vector1[word] * vector2[word]
+
+    return dot_product_value
+
+def magnitude(vector):
+    magnitude_value = 0
+
+    for word in vector:
+        magnitude_value += vector[word] ** 2
+
+    return magnitude_value ** (1/2)
+
+def cosine_similarity(vector1, vector2):
+    magnitude_vector1 = magnitude(vector1)
+    magnitude_vector2 = magnitude(vector2)
+    
+    if magnitude_vector1 == 0 or magnitude_vector2 == 0:
+        return 0
+
+    return (dot_product(vector1, vector2))/(magnitude_vector1 * magnitude_vector2)
+
+
+    
 
 job1 = Job(
     "Software Engineering Intern",
