@@ -77,26 +77,91 @@ def top_k_jobs(scores, k):
 
 job1 = Job(
     "Software Engineering Intern",
-    "Example Corp",
-    "Looking for a student with Python, algorithms, and backend experience."
+    "Nova Systems",
+    "Looking for a student with Python, algorithms, data structures, and backend development experience."
 )
 
 job2 = Job(
     "Backend Engineering Intern",
-    "Another Corp",
-    "Seeking a student with Java, backend systems, and database experience."
+    "CloudForge",
+    "Seeking a student with Java, backend systems, APIs, databases, and distributed systems experience."
 )
 
-jobs = [job1, job2]
+job3 = Job(
+    "Machine Learning Intern",
+    "Visionary AI",
+    "Looking for a student with Python, machine learning, statistics, scikit-learn, and data analysis experience."
+)
+
+job4 = Job(
+    "Data Science Intern",
+    "QuantLeaf",
+    "Seeking a student with Python, pandas, statistics, data visualization, machine learning, and SQL experience."
+)
+
+job5 = Job(
+    "Frontend Engineering Intern",
+    "PixelWorks",
+    "Looking for a student with JavaScript, HTML, CSS, React, and frontend web development experience."
+)
+
+job6 = Job(
+    "AI Research Intern",
+    "DeepMind Labs",
+    "Seeking a student interested in artificial intelligence, Python, neural networks, machine learning, and research."
+)
+
+job7 = Job(
+    "Systems Software Intern",
+    "CoreStack",
+    "Looking for a student with C++, operating systems, algorithms, data structures, and low-level programming experience."
+)
+
+job8 = Job(
+    "Quantitative Research Intern",
+    "AlphaBridge",
+    "Seeking a student with Python, mathematics, probability, statistics, algorithms, and quantitative modeling experience."
+)
+
+job9 = Job(
+    "Cybersecurity Intern",
+    "SecureNet",
+    "Looking for a student with Python, networking, Linux, security, cryptography, and systems experience."
+)
+
+job10 = Job(
+    "Full Stack Engineering Intern",
+    "LaunchPad",
+    "Seeking a student with Python, JavaScript, APIs, databases, backend development, and frontend development experience."
+)
+
+job11 = Job(
+    "NLP Engineering Intern",
+    "LanguageWorks",
+    "Looking for a student with Python, natural language processing, machine learning, embeddings, and text analysis experience."
+)
+
+job12 = Job(
+    "Product Management Intern",
+    "BuildFlow",
+    "Seeking a student with communication, product strategy, user research, project management, and business analysis experience."
+)
+
+jobs = [
+    job1, job2, job3, job4, job5, job6,
+    job7, job8, job9, job10, job11, job12
+]
 
 index = build_inverted_index(jobs)
 
 scores = rank_jobs("python backend", index)
 
-for job, score in scores.items():
-    print(job.title, score)
+# for job, score in scores.items():
+#     print(job.title, score)
 
-top_jobs = top_k_jobs(scores, 2)
+top_jobs = top_k_jobs(scores, 5)
+
+top_jobs.sort(reverse=True)
 
 for score, title, job in top_jobs:
     print(job.title, score)
