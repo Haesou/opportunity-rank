@@ -1,17 +1,17 @@
 import heapq
 import math
 
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
+STOP_WORDS = set(stopwords.words("english"))
+stemmer = PorterStemmer()
+
 class Job:
     def __init__(self, title, company, description):
         self.title = title
         self.company = company
         self.description = description
-
-STOP_WORDS = {
-    "a", "an", "the", "and", "or", "for",
-    "with", "in", "on", "to", "of", "is",
-    "are", "student", "looking", "seeking"
-}
 
 def tokenize(text):
     text = text.lower()
@@ -27,6 +27,7 @@ def tokenize(text):
                 cleaned_word += char
 
         if cleaned_word and cleaned_word not in STOP_WORDS:
+            cleaned_word = stemmer.stem(cleaned_word)
             cleaned_words.append(cleaned_word)
 
     return cleaned_words
@@ -257,5 +258,6 @@ for query in queries:
 
     print("query: " + query)
     for job in ranked:
-        print(job[1], job[0])
+        if job[0] > 0:
+            print(job[1], job[0])
     print()
