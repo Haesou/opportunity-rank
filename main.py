@@ -148,8 +148,18 @@ def cosine_similarity(vector1, vector2):
 
     return (dot_product(vector1, vector2))/(magnitude_vector1 * magnitude_vector2)
 
+def rank_jobs_tfidf(query, jobs):
+    final_scores = {}
+    global_idf = compute_idf(jobs)
+    query_tfidf = compute_query_tfidf(query, global_idf)
 
-    
+    for job in jobs:
+        cosine_similarity_value = cosine_similarity(query_tfidf, compute_tfidf(job, global_idf))
+        final_scores[job] = cosine_similarity_value
+
+    return final_scores
+
+
 
 job1 = Job(
     "Software Engineering Intern",
@@ -228,16 +238,24 @@ jobs = [
     job7, job8, job9, job10, job11, job12
 ]
 
-index = build_inverted_index(jobs)
+queries = [
+    "python backend",
+    "machine learning statistics",
+    "algorithms systems",
+    "nlp embeddings",
+    "mathematics probability",
+    "python machine learning",
+    "javascript frontend",
+    "security cryptography linux",
+    "product user research"
+]
 
-scores = rank_jobs("python backend", index)
+for query in queries:
+    scores = rank_jobs_tfidf(query, jobs)
+    ranked = top_k_jobs(scores, 3)
+    ranked.sort(reverse=True)
 
-# for job, score in scores.items():
-#     print(job.title, score)
-
-top_jobs = top_k_jobs(scores, 5)
-
-top_jobs.sort(reverse=True)
-
-for score, title, job in top_jobs:
-    print(job.title, score)
+    print("query: " + query)
+    for job in ranked:
+        print(job[1], job[0])
+    print()
