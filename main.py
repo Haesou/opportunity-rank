@@ -6,6 +6,12 @@ class Job:
         self.company = company
         self.description = description
 
+STOP_WORDS = {
+    "a", "an", "the", "and", "or", "for",
+    "with", "in", "on", "to", "of", "is",
+    "are", "student", "looking", "seeking"
+}
+
 def tokenize(text):
     text = text.lower()
     words = text.split()
@@ -19,7 +25,7 @@ def tokenize(text):
             if char.isalnum():
                 cleaned_word += char
 
-        if cleaned_word:
+        if cleaned_word and cleaned_word not in STOP_WORDS:
             cleaned_words.append(cleaned_word)
 
     return cleaned_words
@@ -37,17 +43,6 @@ def build_inverted_index(jobs):
             index[word].add(job)
 
     return index
-
-def search(query, index):
-    query_words = tokenize(query)
-
-    results = set()
-
-    for word in query_words:
-        if word in index:
-            results.update(index[word])
-
-    return results
 
 def rank_jobs(query, index):
     query_words = tokenize(query)
