@@ -1,3 +1,5 @@
+import heapq
+
 class Job:
     def __init__(self, title, company, description):
         self.title = title
@@ -30,11 +32,48 @@ def build_inverted_index(jobs):
 
         for word in words:
             if word not in index:
-                index[word] = []
+                index[word] = set()
 
-            index[word].append(job)
+            index[word].add(job)
 
     return index
+
+def search(query, index):
+    query_words = tokenize(query)
+
+    results = set()
+
+    for word in query_words:
+        if word in index:
+            results.update(index[word])
+
+    return results
+
+def rank_jobs(query, index):
+    query_words = tokenize(query)
+
+    scores = {}
+
+    for word in query_words:
+        if word in index:
+            for job in index[word]:
+                if job not in scores:
+                    scores[job] = 0
+
+                scores[job] += 1
+
+    return scores
+
+def top_k_jobs(scores, k):
+    heap = []
+
+    for job in scores:
+        heapq.heappush(heap, (scores[job], job.title, job))
+
+        if len(heap) > k:
+            heapq.heappop(heap)
+
+    return heap
 
 job1 = Job(
     "Software Engineering Intern",
@@ -52,5 +91,12 @@ jobs = [job1, job2]
 
 index = build_inverted_index(jobs)
 
-for job in index["backend"]:
-    print(job.title)
+scores = rank_jobs("python backend", index)
+
+for job, score in scores.items():
+    print(job.title, score)
+
+top_jobs = top_k_jobs(scores, 2)
+
+for score, title, job in top_jobs:
+    print(job.title, score)
