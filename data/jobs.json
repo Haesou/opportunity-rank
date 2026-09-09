@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Software Engineering Intern",
+    "company": "Nova Systems",
+    "location": "Remote",
+    "description": "Looking for a student with Python, algorithms, data structures, and backend development experience.",
+    "url": ""
+  },
+  {
+    "id": 2,
+    "title": "Backend Engineering Intern",
+    "company": "CloudForge",
+    "location": "Remote",
+    "description": "Seeking a student with Java, backend systems, APIs, databases, and distributed systems experience.",
+    "url": ""
+  },
+  {
+    "id": 3,
+    "title": "Machine Learning Intern",
+    "company": "Visionary AI",
+    "location": "Remote",
+    "description": "Looking for a student with Python, machine learning, statistics, scikit-learn, and data analysis experience.",
+    "url": ""
+  },
+  {
+    "id": 4,
+    "title": "Data Science Intern",
+    "company": "QuantLeaf",
+    "location": "Remote",
+    "description": "Seeking a student with Python, pandas, statistics, data visualization, machine learning, and SQL experience.",
+    "url": ""
+  },
+  {
+    "id": 5,
+    "title": "Frontend Engineering Intern",
+    "company": "PixelWorks",
+    "location": "Remote",
+    "description": "Looking for a student with JavaScript, HTML, CSS, React, and frontend web development experience.",
+    "url": ""
+  },
+  {
+    "id": 6,
+    "title": "AI Research Intern",
+    "company": "DeepMind Labs",
+    "location": "Remote",
+    "description": "Seeking a student interested in artificial intelligence, Python, neural networks, machine learning, and research.",
+    "url": ""
+  },
+  {
+    "id": 7,
+    "title": "Systems Software Intern",
+    "company": "CoreStack",
+    "location": "Remote",
+    "description": "Looking for a student with C++, operating systems, algorithms, data structures, and low-level programming experience.",
+    "url": ""
+  },
+  {
+    "id": 8,
+    "title": "Quantitative Research Intern",
+    "company": "AlphaBridge",
+    "location": "Remote",
+    "description": "Seeking a student with Python, mathematics, probability, statistics, algorithms, and quantitative modeling experience.",
+    "url": ""
+  },
+  {
+    "id": 9,
+    "title": "Cybersecurity Intern",
+    "company": "SecureNet",
+    "location": "Remote",
+    "description": "Looking for a student with Python, networking, Linux, security, cryptography, and systems experience.",
+    "url": ""
+  },
+  {
+    "id": 10,
+    "title": "Full Stack Engineering Intern",
+    "company": "LaunchPad",
+    "location": "Remote",
+    "description": "Seeking a student with Python, JavaScript, APIs, databases, backend development, and frontend development experience.",
+    "url": ""
+  },
+  {
+    "id": 11,
+    "title": "NLP Engineering Intern",
+    "company": "LanguageWorks",
+    "location": "Remote",
+    "description": "Looking for a student with Python, natural language processing, machine learning, embeddings, and text analysis experience.",
+    "url": ""
+  },
+  {
+    "id": 12,
+    "title": "Product Management Intern",
+    "company": "BuildFlow",
+    "location": "Remote",
+    "description": "Seeking a student with communication, product strategy, user research, project management, and business analysis experience.",
+    "url": ""
+  }
+]

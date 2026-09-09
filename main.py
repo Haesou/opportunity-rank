@@ -3,6 +3,7 @@ import math
 
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+from sklearn.linear_model import LogisticRegression
 
 STOP_WORDS = set(stopwords.words("english"))
 stemmer = PorterStemmer()
@@ -160,6 +161,25 @@ def rank_jobs_tfidf(query, jobs):
 
     return final_scores
 
+def extract_features(job, query, idf_scores):
+    job_tfidf = compute_tfidf(job, idf_scores)
+    query_tfidf = compute_query_tfidf(query, idf_scores)
+
+    cosine_similarity_val = cosine_similarity(job_tfidf, query_tfidf)
+
+    words = tokenize(job.description)
+
+    return [
+        cosine_similarity_val,
+        1 if "python" in words else 0,
+        1 if "machin" in words else 0,
+        1 if "learn" in words else 0,
+        1 if "algorithm" in words else 0,
+        1 if "mathemat" in words else 0,
+        1 if "statist" in words else 0,
+        1 if "backend" in words else 0,
+        1 if "frontend" in words else 0
+    ]
 
 
 job1 = Job(
@@ -234,30 +254,48 @@ job12 = Job(
     "Seeking a student with communication, product strategy, user research, project management, and business analysis experience."
 )
 
+labels = {
+    job1: 1,
+    job2: 1,
+    job3: 1,
+    job4: 1,
+    job5: 0,
+    job6: 1,
+    job7: 1,
+    job8: 1,
+    job9: 0,
+    job10: 1,
+    job11: 1,
+    job12: 0
+}
+
 jobs = [
     job1, job2, job3, job4, job5, job6,
     job7, job8, job9, job10, job11, job12
 ]
 
-queries = [
-    "python backend",
-    "machine learning statistics",
-    "algorithms systems",
-    "nlp embeddings",
-    "mathematics probability",
-    "python machine learning",
-    "javascript frontend",
-    "security cryptography linux",
-    "product user research"
-]
+query = "python machine learning algorithms mathematics"
 
-for query in queries:
-    scores = rank_jobs_tfidf(query, jobs)
-    ranked = top_k_jobs(scores, 3)
-    ranked.sort(reverse=True)
+idf_scores = compute_idf(jobs)
 
-    print("query: " + query)
-    for job in ranked:
-        if job[0] > 0:
-            print(job[1], job[0])
-    print()
+X = []
+for job in jobs:
+    X.append(extract_features(job, query, idf_scores))
+
+y = []
+for job in jobs:
+    y.append(labels[job])
+
+model = LogisticRegression()
+model.fit(X, y)
+
+print("coefficients:")
+print(model.coef_)
+
+print("intercept:")
+print(model.intercept_)
+
+probabilities = model.predict_proba(X)
+
+for job, probability in zip(jobs, probabilities):
+    print(job.title, probability[1])
