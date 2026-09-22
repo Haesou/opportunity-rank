@@ -42,7 +42,7 @@ def is_relevant(title):
 
 def map_job(raw_job):
     return {
-        "job_id": raw_job["id"],
+        "id": raw_job["id"],
         "title": raw_job["title"],
         "company": raw_job["company_name"],
         "location": raw_job["location"]["name"],
@@ -89,7 +89,7 @@ for job in jobs:
 mapped_jobs = [map_job(job) for job in filtered_jobs]
 
 for job in mapped_jobs:
-    job["description"] = fetch_description("stripe", job["job_id"])
+    job["description"] = fetch_description("stripe", job["id"])
 
 save_jobs(mapped_jobs, "data/jobs.json")
 print(f"Saved {len(mapped_jobs)} jobs to data/jobs.json")

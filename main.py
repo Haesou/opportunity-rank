@@ -16,11 +16,28 @@ query = (
     "algorithms mathematics"
 )
 
+preferred_keywords = [
+    "machine learning",
+    "ai engineer",
+    "data scientist",
+    "data engineer"
+]
+
+def label_job(title):
+    title_lower = title.lower()
+
+    for keyword in preferred_keywords:
+        if keyword in title_lower:
+            return 1
+
+    return 0
+
 
 idf_scores = compute_idf(jobs)
 
 
 X = []
+y = []
 
 for job in jobs:
     X.append(
@@ -30,22 +47,7 @@ for job in jobs:
             idf_scores
         )
     )
-
-
-y = [
-    1,  # Software Engineering
-    1,  # Backend Engineering
-    1,  # Machine Learning
-    1,  # Data Science
-    0,  # Frontend
-    1,  # AI Research
-    1,  # Systems Software
-    1,  # Quantitative Research
-    0,  # Cybersecurity
-    1,  # Full Stack
-    1,  # NLP
-    0   # Product Management
-]
+    y.append(label_job(job.title))
 
 
 model = train_model(X, y)
