@@ -14,6 +14,29 @@ class Job:
         self.employment_type = employment_type
         self.date_posted = date_posted
 
+def load_preferences(filename):
+    try:
+        with open(filename, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return None
+
+def save_preferences(preferences, filename):
+    with open(filename, "w") as file:
+        json.dump(preferences, file, indent=2)
+
+
+def load_labels(filename):
+    try:
+        with open(filename, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+
+def save_labels(labels, filename):
+    with open(filename, "w") as file:
+        json.dump(labels, file, indent=2)
 
 def load_jobs(filename):
     jobs = []
