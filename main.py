@@ -16,21 +16,33 @@ query = (
     "algorithms mathematics"
 )
 
+seniority_keywords = [
+    "intern"
+]
+
 preferred_keywords = [
+    "software engineer",
+    "backend engineer",
+    "full stack engineer",
     "machine learning",
     "ai engineer",
-    "data scientist",
-    "data engineer"
+    "ml engineer"
 ]
 
 def label_job(title):
     title_lower = title.lower()
 
-    for keyword in preferred_keywords:
-        if keyword in title_lower:
-            return 1
+    is_entry_level = any(
+        keyword in title_lower
+        for keyword in seniority_keywords
+    )
 
-    return 0
+    matches_topic = any(
+        keyword in title_lower
+        for keyword in preferred_keywords
+    )
+
+    return 1 if (is_entry_level and matches_topic) else 0
 
 
 idf_scores = compute_idf(jobs)
@@ -49,9 +61,9 @@ for job in jobs:
     )
     y.append(label_job(job.title))
 
+print(y)
 
 model = train_model(X, y)
-
 
 print("coefficients:")
 print(model.coef_)

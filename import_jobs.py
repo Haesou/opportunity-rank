@@ -78,18 +78,42 @@ def save_jobs(jobs, filename):
         json.dump(jobs, file, indent=2)
 
 
-jobs = fetch_job_list("stripe")
+company_slugs = [
+    "stripe",
+    "airbnb",
+    "figma",
+    "anthropic",
+    "databricks",
+    "coinbase",
+    "cloudflare",
+    "lyft"
+]
 
-filtered_jobs = []
 
-for job in jobs:
-    if is_relevant(job["title"]):
-        filtered_jobs.append(job)
+all_mapped_jobs = []
 
-mapped_jobs = [map_job(job) for job in filtered_jobs]
+for company_slug in company_slugs:
+    print(f"Fetching jobs for {company_slug}...")
 
-for job in mapped_jobs:
-    job["description"] = fetch_description("stripe", job["id"])
+    jobs = fetch_job_list(company_slug)
 
-save_jobs(mapped_jobs, "data/jobs.json")
-print(f"Saved {len(mapped_jobs)} jobs to data/jobs.json")
+    filtered_jobs = [
+        job for job in jobs
+        if is_relevant(job["title"])
+    ]
+
+    mapped_jobs = [map_job(job) for job in filtered_jobs]
+
+    for job in mapped_jobs:
+        job["description"] = fetch_description(
+            company_slug,
+            job["id"]
+        )
+
+    all_mapped_jobs.extend(mapped_jobs)
+
+    print(f"  -> {len(mapped_jobs)} relevant jobs found")
+
+
+save_jobs(all_mapped_jobs, "data/jobs.json")
+print(f"\nSaved {len(all_mapped_jobs)} total jobs to data/jobs.json")
