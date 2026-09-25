@@ -38,29 +38,10 @@ def get_title_words(title):
 
 def extract_features(
     job,
-    query,
-    idf_scores
+    idf_scores=None,
+    query=None
 ):
-    job_tfidf = compute_tfidf(
-        job,
-        idf_scores
-    )
-
-    query_tfidf = compute_query_tfidf(
-        query,
-        idf_scores
-    )
-
-    cosine_similarity_val = (
-        cosine_similarity(
-            job_tfidf,
-            query_tfidf
-        )
-    )
-
     words = tokenize(job.description)
-    title_lower = job.title.lower()
-
     job_words = get_title_words(job.title)
 
     is_entry = (
@@ -93,8 +74,15 @@ def extract_features(
         for keyword in EAST_COAST_KEYWORDS
     )
 
-    return [
-        cosine_similarity_val,
+    features = []
+
+    if query is not None:
+        job_tfidf = compute_tfidf(job, idf_scores)
+        query_tfidf = compute_query_tfidf(query, idf_scores)
+        cosine_similarity_val = cosine_similarity(job_tfidf, query_tfidf)
+        features.append(cosine_similarity_val)
+
+    features.extend([
         1 if "python" in words else 0,
         1 if "machin" in words else 0,
         1 if "learn" in words else 0,
@@ -109,7 +97,9 @@ def extract_features(
         *company_flags,
         1 if is_west_coast else 0,
         1 if is_east_coast else 0
-    ]
+    ])
+
+    return features
 
 
 def train_model(X, y):
