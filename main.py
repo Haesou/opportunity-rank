@@ -43,6 +43,10 @@ def matches_seniority(job, seniority_keywords):
     return len(get_matched_keywords(job, seniority_keywords)) > 0
 
 
+def matches_language(job, language_keywords):
+    return len(get_matched_keywords(job, language_keywords)) > 0
+
+
 jobs = load_jobs("data/jobs.json")
 
 
@@ -51,6 +55,9 @@ preferences = load_preferences("data/preferences.json")
 if preferences is None:
     seniority_input = input(
         "What seniority keywords are you interested in? (comma-separated, e.g. intern,new grad): "
+    )
+    language_input = input(
+        "What programming languages are you interested in? (comma-separated, e.g. python,java): "
     )
     topic_input = input(
         "What topic keywords are you interested in? (comma-separated, e.g. machine learning,backend): "
@@ -64,6 +71,10 @@ if preferences is None:
         "preferred_keywords": [
             word.strip().lower()
             for word in topic_input.split(",")
+        ],
+        "language_keywords": [
+            word.strip().lower()
+            for word in language_input.split(",")
         ]
     }
 
@@ -71,6 +82,7 @@ if preferences is None:
 
 seniority_keywords = preferences["seniority_keywords"]
 preferred_keywords = preferences["preferred_keywords"]
+language_keywords = preferences["language_keywords"]
 
 
 def label_job(title):
@@ -95,6 +107,7 @@ filtered_jobs = [
     job for job in jobs
     if matches_preferences(job, preferred_keywords)
     and matches_seniority(job, seniority_keywords)
+    and matches_language(job, language_keywords)
 ]
 
 print(f"{len(filtered_jobs)} jobs matched your preferences.")
@@ -107,9 +120,11 @@ for job in filtered_jobs:
 
     matched_topic = get_matched_keywords(job, preferred_keywords)
     matched_seniority = get_matched_keywords(job, seniority_keywords)
+    matched_language = get_matched_keywords(job, language_keywords)
 
     print(f"\n'{job.title}' at {job.company}")
     print(f"  Topic keywords found: {matched_topic}")
+    print(f"  Language keywords found: {matched_language}")
     print(f"  Seniority keywords found: {matched_seniority}")
 
     response = input("Interested? (y/n): ")

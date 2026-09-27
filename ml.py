@@ -33,6 +33,24 @@ EAST_COAST_KEYWORDS = [
     "ny"
 ]
 
+TEAM_AREA_KEYWORDS = {
+    "payments_billing": ["payments", "billing", "money movement"],
+    "infrastructure_platform": ["infrastructure", "platform", "cloud", "distributed systems"],
+    "security_risk": ["security", "risk", "fraud", "trust", "safety"],
+    "data_ml_ai": ["data", "machine learning", "ai", "ml"]
+}
+
+def get_team_area_flags(job):
+    combined_text = f"{job.title} {job.description}".lower()
+
+    flags = []
+
+    for area, keywords in TEAM_AREA_KEYWORDS.items():
+        matched = any(keyword in combined_text for keyword in keywords)
+        flags.append(1 if matched else 0)
+
+    return flags
+
 def get_title_words(title):
     return re.findall(r"[a-z]+", title.lower())
 
@@ -74,6 +92,8 @@ def extract_features(
         for keyword in EAST_COAST_KEYWORDS
     )
 
+    team_area_flags = get_team_area_flags(job)
+
     features = []
 
     if query is not None:
@@ -96,7 +116,8 @@ def extract_features(
         1 if is_staff_plus else 0,
         *company_flags,
         1 if is_west_coast else 0,
-        1 if is_east_coast else 0
+        1 if is_east_coast else 0,
+        *team_area_flags
     ])
 
     return features
