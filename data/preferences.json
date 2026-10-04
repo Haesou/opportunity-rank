@@ -1,14 +1,18 @@
 {
   "seniority_keywords": [
-    "intern",
-    "new grad"
+    "intern"
   ],
   "preferred_keywords": [
     "machine learning",
     "backend",
-    "software engineer"
+    "software engineering",
+    "software development",
+    "ai"
   ],
   "language_keywords": [
-    "python"
+    "python",
+    "c",
+    "c++",
+    "java"
   ]
 }

@@ -25,9 +25,12 @@ def fetch_job_list(company_slug):
     url = f"https://boards-api.greenhouse.io/v1/boards/{company_slug}/jobs"
 
     response = requests.get(url)
-    data = response.json()
 
-    return data["jobs"]
+    if response.status_code != 200:
+        print(f"  Skipping {company_slug}: HTTP {response.status_code}")
+        return []
+
+    return response.json().get("jobs", [])
 
 
 def is_relevant(title):
@@ -40,12 +43,15 @@ def is_relevant(title):
     return False
 
 
-def map_job(raw_job):
+def map_job(raw_job, company_slug):
+    location = (raw_job.get("location") or {}).get("name")
+
     return {
         "id": raw_job["id"],
         "title": raw_job["title"],
         "company": raw_job["company_name"],
-        "location": raw_job["location"]["name"],
+        "company_slug": company_slug,
+        "location": location,
         "url": raw_job["absolute_url"],
         "date_posted": raw_job["updated_at"],
         "description": None,
@@ -78,21 +84,19 @@ def save_jobs(jobs, filename):
         json.dump(jobs, file, indent=2)
 
 
-company_slugs = [
-    "stripe",
-    "airbnb",
-    "figma",
-    "anthropic",
-    "databricks",
-    "coinbase",
-    "cloudflare",
-    "lyft"
+COMPANY_SLUGS = [
+    "stripe", "airbnb", "figma", "anthropic", "databricks",
+    "coinbase", "cloudflare", "lyft",
+    "andurilindustries", "gleanwork", "gallup", "dvtrading",
+    "togetherai", "spacex", "pdtpartners", "astranis",
+    "affirm", "imc", "scaleai", "doordashusa", "drweng",
+    "aquaticcapitalmanagement"
 ]
 
 
 all_mapped_jobs = []
 
-for company_slug in company_slugs:
+for company_slug in COMPANY_SLUGS:
     print(f"Fetching jobs for {company_slug}...")
 
     jobs = fetch_job_list(company_slug)
@@ -102,13 +106,16 @@ for company_slug in company_slugs:
         if is_relevant(job["title"])
     ]
 
-    mapped_jobs = [map_job(job) for job in filtered_jobs]
+    mapped_jobs = [map_job(job, company_slug) for job in filtered_jobs]
 
     for job in mapped_jobs:
-        job["description"] = fetch_description(
-            company_slug,
-            job["id"]
-        )
+        try:
+            job["description"] = fetch_description(
+                company_slug,
+                job["id"]
+            )
+        except Exception:
+            job["description"] = ""
 
     all_mapped_jobs.extend(mapped_jobs)
 

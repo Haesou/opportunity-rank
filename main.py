@@ -10,7 +10,8 @@ from models import (
 
 from ml import (
     extract_features,
-    train_model
+    train_model,
+    get_team_areas
 )
 
 
@@ -25,7 +26,7 @@ def get_matched_keywords(job, keywords):
     matched = []
 
     for keyword in keywords:
-        if " " in keyword:
+        if " " in keyword or not keyword.isalpha():
             if keyword in combined_text:
                 matched.append(keyword)
         else:
@@ -121,13 +122,16 @@ for job in filtered_jobs:
     matched_topic = get_matched_keywords(job, preferred_keywords)
     matched_seniority = get_matched_keywords(job, seniority_keywords)
     matched_language = get_matched_keywords(job, language_keywords)
+    team_areas = get_team_areas(job)
 
     print(f"\n'{job.title}' at {job.company}")
-    print(f"  Topic keywords found: {matched_topic}")
-    print(f"  Language keywords found: {matched_language}")
-    print(f"  Seniority keywords found: {matched_seniority}")
+    print(f"  Location: {job.location or 'Not listed'}")
+    print(f"  Team areas: {', '.join(team_areas) or 'None detected'}")
+    print(f"  Link: {job.url}")
+    print(f"  Matched your filters on: topic {matched_topic}, "
+          f"language {matched_language}, seniority {matched_seniority}")
 
-    response = input("Interested? (y/n): ")
+    response = input("Really interested? (y/n): ")
 
     labels[job_id_str] = 1 if response.strip().lower() == "y" else 0
     save_labels(labels, "data/labels.json")

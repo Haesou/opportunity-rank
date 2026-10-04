@@ -10,15 +10,14 @@ from search import (
 
 
 COMPANIES = [
-    "stripe",
-    "airbnb",
-    "figma",
-    "anthropic",
-    "databricks",
-    "coinbase",
-    "cloudflare",
-    "lyft"
+    "stripe", "airbnb", "figma", "anthropic", "databricks",
+    "coinbase", "cloudflare", "lyft",
+    "andurilindustries", "gleanwork", "gallup", "dvtrading",
+    "togetherai", "spacex", "pdtpartners", "astranis",
+    "affirm", "imc", "scaleai", "doordashusa", "drweng",
+    "aquaticcapitalmanagement"
 ]
+
 
 WEST_COAST_KEYWORDS = [
     "san francisco",
@@ -51,6 +50,17 @@ def get_team_area_flags(job):
 
     return flags
 
+def get_team_areas(job):
+    combined_text = f"{job.title} {job.description}".lower()
+
+    areas = []
+
+    for area, keywords in TEAM_AREA_KEYWORDS.items():
+        if any(keyword in combined_text for keyword in keywords):
+            areas.append(area)
+
+    return areas
+
 def get_title_words(title):
     return re.findall(r"[a-z]+", title.lower())
 
@@ -74,9 +84,9 @@ def extract_features(
 
     is_mid = not is_entry and not is_staff_plus
 
-    company_lower = job.company.lower()
+    company_key = job.company_slug or job.company.lower()
     company_flags = [
-        1 if company_lower == company else 0
+        1 if company_key == company else 0
         for company in COMPANIES
     ]
 

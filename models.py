@@ -3,7 +3,8 @@ import json
 
 class Job:
     def __init__(self, job_id, title, company, location, description, url,
-                 salary=None, employment_type=None, date_posted=None):
+                 salary=None, employment_type=None, date_posted=None,
+                 company_slug=None):
         self.job_id = job_id
         self.title = title
         self.company = company
@@ -13,6 +14,7 @@ class Job:
         self.salary = salary
         self.employment_type = employment_type
         self.date_posted = date_posted
+        self.company_slug = company_slug
 
 def load_preferences(filename):
     try:
@@ -54,7 +56,8 @@ def load_jobs(filename):
             job_data["url"],
             salary=job_data.get("salary"),
             employment_type=job_data.get("employment_type"),
-            date_posted=job_data.get("date_posted")
+            date_posted=job_data.get("date_posted"),
+            company_slug=job_data.get("company_slug")
         )
 
         jobs.append(job)
